@@ -6,7 +6,8 @@ import ActivityFeed from './components/ActivityFeed'
 import ExportPanel from './components/ExportPanel'
 
 // API Base URL - uses environment variable in production, localhost in dev
-const API_BASE = import.meta.env.VITE_API_URL || 'http://localhost:8000'
+// Remove trailing slash to prevent double-slash issues
+const API_BASE = (import.meta.env.VITE_API_URL || 'http://localhost:8000').replace(/\/+$/, '')
 
 function App() {
   const [mission, setMission] = useState(null)
@@ -393,7 +394,7 @@ function App() {
       {/* Footer */}
       <footer className="border-t border-slate-700 mt-auto">
         <div className="max-w-7xl mx-auto px-4 py-4 text-center text-sm text-slate-500">
-          Built with Google ADK & Gemini 3 Pro | Gemini Hackathon 2025
+          Built with Gemini 3 Flash + Google Search Grounding | Gemini API Developer Competition
         </div>
       </footer>
     </div>

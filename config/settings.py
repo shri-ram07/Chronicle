@@ -17,13 +17,13 @@ class Settings(BaseSettings):
     # Gemini API (optional - users can provide their own key in requests)
     gemini_api_key: Optional[str] = Field(default=None, alias="GEMINI_API_KEY")
 
-    # Model Configuration
-    coordinator_model: str = "gemini-2.0-flash"
-    planner_model: str = "gemini-2.0-flash"
-    researcher_model: str = "gemini-2.0-flash"
-    analyst_model: str = "gemini-2.0-flash"
-    scorer_model: str = "gemini-2.0-flash"
-    actioner_model: str = "gemini-2.0-flash"
+    # Model Configuration - Using Gemini 3 Flash (latest)
+    coordinator_model: str = "gemini-3-flash"
+    planner_model: str = "gemini-3-flash"
+    researcher_model: str = "gemini-3-flash"
+    analyst_model: str = "gemini-3-flash"
+    scorer_model: str = "gemini-3-flash"
+    actioner_model: str = "gemini-3-flash"
 
     # Server Configuration
     host: str = Field(default="0.0.0.0", alias="HOST")
