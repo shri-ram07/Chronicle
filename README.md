@@ -77,26 +77,40 @@ Output: 15 deeply-researched tools with pricing, features, pros/cons,
 
 ## Architecture
 
-```
-┌─────────────────────────────────────────────────────────────────────────┐
-│                         CHRONICLE ARCHITECTURE                           │
-├─────────────────────────────────────────────────────────────────────────┤
-│                                                                          │
-│  ┌──────────────┐         ┌──────────────┐         ┌──────────────┐    │
-│  │   FRONTEND   │         │   BACKEND    │         │  GEMINI 3    │    │
-│  │  React+SSE   │◄───────►│   FastAPI    │◄───────►│    FLASH     │    │
-│  └──────────────┘         └──────────────┘         └──────────────┘    │
-│         │                        │                        │             │
-│         ▼                        ▼                        ▼             │
-│  ┌──────────────┐         ┌──────────────┐         ┌──────────────┐    │
-│  │ • Progress   │         │ • Mission    │         │ • Search     │    │
-│  │   Monitor    │         │   Manager    │         │   Grounding  │    │
-│  │ • Findings   │         │ • Event Bus  │         │ • Structured │    │
-│  │   Table      │         │ • Exporter   │         │   Output     │    │
-│  │ • Exports    │         │ • Persistence│         │ • Reasoning  │    │
-│  └──────────────┘         └──────────────┘         └──────────────┘    │
-│                                                                          │
-└─────────────────────────────────────────────────────────────────────────┘
+```mermaid
+flowchart LR
+    subgraph Frontend
+        A[React + SSE Client]
+        A1[Progress Monitor]
+        A2[Findings Table]
+        A3[Export Downloads]
+    end
+
+    subgraph Backend
+        B[FastAPI Server]
+        B1[Mission Manager]
+        B2[Event Bus]
+        B3[File Exporter]
+    end
+
+    subgraph AI Engine
+        C[Gemini 3 Flash]
+        C1[Google Search Grounding]
+        C2[Structured Output]
+        C3[Multi-Phase Reasoning]
+    end
+
+    A <--> B
+    B <--> C
+    A1 --> A
+    A2 --> A
+    A3 --> A
+    B1 --> B
+    B2 --> B
+    B3 --> B
+    C1 --> C
+    C2 --> C
+    C3 --> C
 ```
 
 ---
@@ -105,29 +119,55 @@ Output: 15 deeply-researched tools with pricing, features, pros/cons,
 
 This is CHRONICLE's core innovation. Instead of **1 query = 200 shallow names**, we execute **75+ targeted queries = 15 deeply-researched entities**.
 
-```
-[PLAN]──►[DISCOVER]──►[DEEP DIVE]──►[COMPARE]──►[VALIDATE]
-                           │                         │
-                           │         ┌───────────────┘
-                           ▼         ▼
-                       [SCORE]◄──[SELF-CORRECT]──►[SYNTHESIZE]
+```mermaid
+flowchart LR
+    P[Plan] --> D[Discover]
+    D --> DD[Deep Dive]
+    DD --> C[Compare]
+    C --> V[Validate]
+    V --> SC[Score]
+    SC --> SCR[Self-Correct]
+    SCR --> SY[Synthesize]
+    SCR -.->|Re-research| DD
 ```
 
-### The Deep Dive Innovation
+| Phase | Description |
+|-------|-------------|
+| **1. Plan** | Create research strategy, generate 5-7 queries |
+| **2. Discover** | Find 20-50 candidates from multiple search angles |
+| **3. Deep Dive** | 5 queries PER entity (pricing, features, reviews...) |
+| **4. Compare** | Head-to-head entity comparisons |
+| **5. Validate** | Cross-reference sources, verify claims |
+| **6. Score** | Semantic quality evaluation by LLM |
+| **7. Self-Correct** | Re-research shallow findings automatically |
+| **8. Synthesize** | Generate executive summary and recommendations |
+
+---
+
+## The Deep Dive Innovation
 
 For **each entity**, we run **5 targeted queries**:
 
-```
-                    Single Entity (e.g., Notion)
-                              │
-          ┌───────────┬───────┴───────┬───────────┐
-          ▼           ▼               ▼           ▼
-      Pricing     Features        Reviews    Competitors
-       Query        Query          Query        Query
-          │           │               │           │
-          ▼           ▼               ▼           ▼
-      $10/mo      Databases      Pros/Cons    vs Coda
-      $18/mo      Wiki, AI       from users   vs Clickup
+```mermaid
+flowchart TB
+    E[Single Entity: Notion]
+    E --> Q1[Pricing Query]
+    E --> Q2[Features Query]
+    E --> Q3[Reviews Query]
+    E --> Q4[Competitors Query]
+    E --> Q5[Use Cases Query]
+
+    Q1 --> R1["$10/mo, $18/mo, Free tier"]
+    Q2 --> R2["Databases, Wiki, AI Assistant"]
+    Q3 --> R3["Pros: Flexible | Cons: Learning curve"]
+    Q4 --> R4["vs Coda, vs Clickup, vs Monday"]
+    Q5 --> R5["Best for: Startups, Teams, Docs"]
+
+    R1 --> DF[DeepFinding<br/>15+ attributes<br/>depth_score: 0.85]
+    R2 --> DF
+    R3 --> DF
+    R4 --> DF
+    R5 --> DF
 ```
 
 **Result:** `15 entities × 5 queries = 75+ targeted searches with Google Search Grounding`
@@ -138,19 +178,22 @@ For **each entity**, we run **5 targeted queries**:
 
 CHRONICLE doesn't just research—it **validates quality** and **re-researches gaps**.
 
-```
-Findings ──► Semantic Scoring ──► Depth >= 0.7? ──► YES ──► Done
-                                       │
-                                       NO
-                                       │
-                                       ▼
-                              Identify Shallow Items
-                                       │
-                                       ▼
-                              Run Targeted Queries
-                                       │
-                                       ▼
-                              Merge & Re-Score
+```mermaid
+flowchart TD
+    F[All Findings] --> SS[Semantic Quality Scoring<br/>Gemini 3 evaluates each]
+    SS --> Check{Depth >= 0.7?}
+    Check -->|YES| Done[Done - High Quality]
+    Check -->|NO| Identify[Identify Shallow Items]
+    Identify --> Query[Run Targeted Queries]
+    Query --> Merge[Merge and Re-Score]
+    Merge --> SS
+
+    subgraph Quality Checks
+        QC1[Specific prices?]
+        QC2[Real features?]
+        QC3[Actual pros/cons?]
+        QC4[Sources cited?]
+    end
 ```
 
 **Quality Checks:**
